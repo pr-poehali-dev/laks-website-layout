@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Menu, X, User, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -34,12 +36,27 @@ const Header = () => {
         </nav>
         
         <div className="hidden md:flex items-center space-x-3">
-          <Button variant="outline" size="sm">
-            Авторизация
-          </Button>
-          <Button size="sm">
-            Регистрация
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm">
+                <User className="h-4 w-4 mr-2" />
+                Доступ
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => navigate("/auth")}>
+                Авторизация
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/register")}>
+                Регистрация
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => navigate("/employee/login")}>
+                <Lock className="h-4 w-4 mr-2" />
+                Вход для сотрудников
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         
         <button className="md:hidden" onClick={toggleMenu}>
@@ -94,11 +111,24 @@ const Header = () => {
               </Link>
               
               <div className="flex flex-col space-y-3 pt-4">
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full" onClick={() => {
+                  navigate("/auth");
+                  toggleMenu();
+                }}>
                   Авторизация
                 </Button>
-                <Button className="w-full">
+                <Button className="w-full" onClick={() => {
+                  navigate("/register");
+                  toggleMenu();
+                }}>
                   Регистрация
+                </Button>
+                <Button variant="secondary" className="w-full mt-4" onClick={() => {
+                  navigate("/employee/login");
+                  toggleMenu();
+                }}>
+                  <Lock className="h-4 w-4 mr-2" />
+                  Вход для сотрудников
                 </Button>
               </div>
             </nav>
